@@ -1,5 +1,4 @@
 using System;
-using System.Transactions;
 using KeoghsCheckout.Core;
 using NUnit.Framework;
 
@@ -8,12 +7,57 @@ namespace KeoghsCheckout.Tests
     [TestFixture]
     public class BasketTests
     {
+        private Item _itemA;
+        private Item _itemB;
+        private Item _itemC;
+        private Item _itemD;
+        private Basket _basket;
+        private Promotion _promotionThreeForFortySKUB;
+        private Promotion _promotionTwentyFivePercentOffEveryTwoSKUD;
+
+        [SetUp]
+        public void Setup()
+        {
+            _basket = new Basket();
+            _itemA = new Item("A", 10);
+            _itemB = new Item("B", 15);
+            _itemC = new Item("C", 40);
+            _itemD = new Item("D", 55);
+            
+            _promotionThreeForFortySKUB = new Promotion("B", "3 for 40", (quantity, unitPrice) =>
+            {
+                var total = 0.0m;
+                while (quantity >= 3)
+                {
+                    total += 40;
+                    quantity -= 3;
+                }
+
+                total += quantity * unitPrice;
+                return total;
+            });
+
+            _promotionTwentyFivePercentOffEveryTwoSKUD = new Promotion("D", "25% off for every 2 purchased together",
+                (quantity, unitPrice) =>
+                {
+                    var total = 0.0m;
+                    while (quantity >= 2)
+                    {
+                        total += ((2 * unitPrice) * 0.75m);
+                        quantity -= 2;
+                    }
+
+                    total += quantity * unitPrice;
+                    return total;
+                });
+        }
+        
         [Test]
         public void BasketAddItem_Item_AddsItem()
         {
-            Basket basket = new Basket();
-            basket.AddItem(new Item("A", 10));
-            Item item = basket.GetItem("A");
+            _basket.AddItem(_itemA);
+            
+            var item = _basket.GetItem("A");
             
             Assert.IsNotNull(item);
             Assert.AreEqual("A", item.SKU);
@@ -22,11 +66,10 @@ namespace KeoghsCheckout.Tests
         [Test]
         public void BasketAddItem_ExistingItem_IncrementLineQuantity()
         {
-            Basket basket = new Basket();
-            basket.AddItem(new Item("A", 10));
-            basket.AddItem(new Item("A", 10));
+            _basket.AddItem(_itemA);
+            _basket.AddItem(_itemA);
             
-            LineItem lineItem = basket.GetLineItem("A");
+            var lineItem = _basket.GetLineItem("A");
             
             Assert.AreEqual(2, lineItem.Quantity);
         }
@@ -34,144 +77,79 @@ namespace KeoghsCheckout.Tests
         [Test]
         public void BasketAddPromotion_Promotion_AddPromotion()
         {
-            Basket basket = new Basket();
-            basket.AddPromotion(new Promotion("A", "3 for 40", (quantity, unitPrice) =>
-            {
-                var total = 0.0m;
-                while (quantity >= 3)
-                {
-                    total += 40;
-                    quantity -= 3;
-                }
+            _basket.AddPromotion(_promotionThreeForFortySKUB);
 
-                total += quantity * unitPrice;
-                return total;
-            }));
-
-            Promotion promo = basket.GetPromotion("A");
+            var promo = _basket.GetPromotion("B");
             
             Assert.IsNotNull(promo);
-            Assert.AreEqual(promo.SKU, "A");
+            Assert.AreEqual(promo.SKU, "B");
             Assert.AreEqual(promo.Description, "3 for 40");
         }
 
         [Test]
         public void BasketAddPromotion_ExistingPromotion_ThrowException()
         {
-            Basket basket = new Basket();
-            basket.AddPromotion(new Promotion("A", "3 for 40", (quantity, unitPrice) => 0 ));
+            _basket.AddPromotion(_promotionThreeForFortySKUB);
 
             Assert.Throws<ArgumentException>(() =>
             {
-                basket.AddPromotion(new Promotion("A", "3 for 40", (quantity, unitPrice) => 0));
+                _basket.AddPromotion(_promotionThreeForFortySKUB);
             });
         }
 
         [Test]
         public void BasketTotalCost_ItemsAddedNoPromotion_CorrectTotalCost()
         {
-            Basket basket = new Basket();
-            basket.AddItem(new Item("A", 10));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("C", 40));
-            basket.AddItem(new Item("D", 55));
+            _basket.AddItem(_itemA);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemC);
+            _basket.AddItem(_itemD);
             
-            Assert.AreEqual(120m, basket.GetTotalCost());
+            Assert.AreEqual(120m, _basket.GetTotalCost());
         }
 
         [Test]
         public void BasketTotalCost_ItemsAddedWithPromotion_CorrectTotalCost()
         {
-            Basket basket = new Basket();
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("D", 55));
-            basket.AddItem(new Item("D", 55));
-            basket.AddItem(new Item("D", 55));
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemD);
+            _basket.AddItem(_itemD);
+            _basket.AddItem(_itemD);
             
-            basket.AddPromotion(new Promotion("B", "3 for 40", (quantity, unitPrice) =>
-            {
-                var total = 0.0m;
-                while (quantity >= 3)
-                {
-                    total += 40;
-                    quantity -= 3;
-                }
+            _basket.AddPromotion(_promotionThreeForFortySKUB);
+            _basket.AddPromotion(_promotionTwentyFivePercentOffEveryTwoSKUD);
             
-                total += quantity * unitPrice;
-                return total;
-            }));
-            
-            
-            basket.AddPromotion(new Promotion("D", "25% off for every 2 purchased together", (quantity, unitPrice) =>
-            {
-                var total = 0.0m;
-                while (quantity >= 2)
-                {
-                    total += ((2 * unitPrice) * 0.75m);
-                    quantity -= 2;
-                }
-            
-                total += quantity * unitPrice;
-                return total;
-            }));
-            
-            Assert.AreEqual(207.5m, basket.GetTotalCost());
+            Assert.AreEqual(207.5m, _basket.GetTotalCost());
         }
 
         [Test]
         public void BasketTotalCost_ItemsAddedWithAndWithoutPromotions_CorrectTotalCost()
         {
+            _basket.AddItem(_itemA);
+            _basket.AddItem(_itemA);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemB);
+            _basket.AddItem(_itemC);
+            _basket.AddItem(_itemC);
+            _basket.AddItem(_itemD);
+            _basket.AddItem(_itemD);
+            _basket.AddItem(_itemD);
+            _basket.AddItem(_itemD);
+            _basket.AddItem(_itemD);
             
-            Basket basket = new Basket();
-            basket.AddItem(new Item("A", 10));
-            basket.AddItem(new Item("A", 10));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("B", 15));
-            basket.AddItem(new Item("C", 40));
-            basket.AddItem(new Item("C", 40));
-            basket.AddItem(new Item("D", 55));
-            basket.AddItem(new Item("D", 55));
-            basket.AddItem(new Item("D", 55));
-            basket.AddItem(new Item("D", 55));
-            basket.AddItem(new Item("D", 55));
+            _basket.AddPromotion(_promotionThreeForFortySKUB);
+            _basket.AddPromotion(_promotionTwentyFivePercentOffEveryTwoSKUD);
             
-            basket.AddPromotion(new Promotion("B", "3 for 40", (quantity, unitPrice) =>
-            {
-                var total = 0.0m;
-                while (quantity >= 3)
-                {
-                    total += 40;
-                    quantity -= 3;
-                }
-            
-                total += quantity * unitPrice;
-                return total;
-            }));
-            
-            
-            basket.AddPromotion(new Promotion("D", "25% off for every 2 purchased together", (quantity, unitPrice) =>
-            {
-                var total = 0.0m;
-                while (quantity >= 2)
-                {
-                    total += ((2 * unitPrice) * 0.75m);
-                    quantity -= 2;
-                }
-            
-                total += quantity * unitPrice;
-                return total;
-            }));
-            
-            Assert.AreEqual(415m, basket.GetTotalCost());
+            Assert.AreEqual(415m, _basket.GetTotalCost());
         }
     }
 }
