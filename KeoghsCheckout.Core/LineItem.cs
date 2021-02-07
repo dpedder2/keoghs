@@ -3,11 +3,17 @@ namespace KeoghsCheckout.Core
     public class LineItem
     {
         public Item Item { get; }
-        private int _quantity = 0; 
+        public int Quantity { get; private set; }
 
         public LineItem(Item item)
         {
             Item = item;
+            IncrementQuantity();
+        }
+
+        public void IncrementQuantity()
+        {
+            Quantity++;
         }
     }
 }
