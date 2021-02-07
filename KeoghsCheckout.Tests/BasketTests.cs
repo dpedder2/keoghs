@@ -1,3 +1,4 @@
+using System;
 using System.Transactions;
 using KeoghsCheckout.Core;
 using NUnit.Framework;
@@ -8,7 +9,7 @@ namespace KeoghsCheckout.Tests
     public class BasketTests
     {
         /*
-         * BasketAddPromotion_ExistingPromotion_ThrowException
+         * 
          * BasketTotalCost_ItemsAddedNoPromotion_CorrectTotalCost
          * BasketTotalCost_ItemsAddedWithPromotion_CorrectTotalCost
          * BasketTotalCost_ItemsAddedWithAndWithoutPromotions_CorrectTotalCost
@@ -59,6 +60,18 @@ namespace KeoghsCheckout.Tests
             Assert.IsNotNull(promo);
             Assert.AreEqual(promo.SKU, "A");
             Assert.AreEqual(promo.Description, "3 for 40");
+        }
+
+        [Test]
+        public void BasketAddPromotion_ExistingPromotion_ThrowException()
+        {
+            Basket basket = new Basket();
+            basket.AddPromotion(new Promotion("A", "3 for 40", (quantity, unitPrice) => 0 ));
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                basket.AddPromotion(new Promotion("A", "3 for 40", (quantity, unitPrice) => 0));
+            });
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,6 +34,12 @@ namespace KeoghsCheckout.Core
 
         public void AddPromotion(Promotion promotion)
         {
+            var promo = _promotions.FirstOrDefault(i => i.SKU == promotion.SKU);
+            if (promo != null)
+            {
+                throw new ArgumentException();
+            }
+            
             _promotions.Add(promotion);
         }
 
