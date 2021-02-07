@@ -8,7 +8,18 @@ namespace KeoghsCheckout.Core
     {
         private List<LineItem> _lineItems = new List<LineItem>();
         private List<Promotion> _promotions = new List<Promotion>();
+        
+        public decimal GetTotalCost()
+        {
+            var total = 0m;
+            foreach (var lineItem in _lineItems)
+            {
+                total += lineItem.Item.UnitPrice * lineItem.Quantity;
+            }
 
+            return total;
+        }
+        
         public void AddItem(Item item)
         {
             var lineItem = GetLineItem(item.SKU);
