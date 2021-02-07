@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeoghsCheckout", "KeoghsCheckout\KeoghsCheckout.csproj", "{778B5A1C-9B87-46D6-9017-D50ED0E18E88}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeoghsCheckout.Tests", "KeoghsCheckout.Tests\KeoghsCheckout.Tests.csproj", "{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeoghsCheckout.Core", "KeoghsCheckout.Core\KeoghsCheckout.Core.csproj", "{C565A604-0999-44A4-8445-49B8152A8287}"
@@ -12,10 +10,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{778B5A1C-9B87-46D6-9017-D50ED0E18E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{778B5A1C-9B87-46D6-9017-D50ED0E18E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{778B5A1C-9B87-46D6-9017-D50ED0E18E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{778B5A1C-9B87-46D6-9017-D50ED0E18E88}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
