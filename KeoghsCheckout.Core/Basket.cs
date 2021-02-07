@@ -41,16 +41,6 @@ namespace KeoghsCheckout.Core
             }
         }
 
-        public Item GetItem(string sku)
-        {
-            return _lineItems.FirstOrDefault(i => i.Item.SKU == sku)?.Item;
-        }
-
-        public LineItem GetLineItem(string sku)
-        {
-            return _lineItems.FirstOrDefault(i => i.Item.SKU == sku);
-        }
-
         public void AddPromotion(Promotion promotion)
         {
             var promo = _promotions.FirstOrDefault(i => i.SKU == promotion.SKU);
@@ -61,10 +51,11 @@ namespace KeoghsCheckout.Core
             
             _promotions.Add(promotion);
         }
+        
+        public Item GetItem(string sku) => _lineItems.FirstOrDefault(i => i.Item.SKU == sku)?.Item;
 
-        public Promotion GetPromotion(string sku)
-        {
-            return _promotions.FirstOrDefault(i => i.SKU == sku);
-        }
+        public LineItem GetLineItem(string sku) => _lineItems.FirstOrDefault(i => i.Item.SKU == sku);
+
+        public Promotion GetPromotion(string sku) => _promotions.FirstOrDefault(i => i.SKU == sku);
     }
 }
