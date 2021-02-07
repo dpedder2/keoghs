@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeoghsCheckout", "KeoghsChe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeoghsCheckout.Tests", "KeoghsCheckout.Tests\KeoghsCheckout.Tests.csproj", "{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeoghsCheckout.Core", "KeoghsCheckout.Core\KeoghsCheckout.Core.csproj", "{C565A604-0999-44A4-8445-49B8152A8287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7775983-5AA1-4DCC-A598-F4F0F7C22E1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C565A604-0999-44A4-8445-49B8152A8287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C565A604-0999-44A4-8445-49B8152A8287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C565A604-0999-44A4-8445-49B8152A8287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C565A604-0999-44A4-8445-49B8152A8287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
