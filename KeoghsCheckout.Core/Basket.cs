@@ -14,7 +14,15 @@ namespace KeoghsCheckout.Core
             var total = 0m;
             foreach (var lineItem in _lineItems)
             {
-                total += lineItem.Item.UnitPrice * lineItem.Quantity;
+                var promo = GetPromotion(lineItem.Item.SKU);
+                if (promo != null)
+                {
+                    total += promo.Apply(lineItem.Quantity, lineItem.Item.UnitPrice);
+                }
+                else
+                {
+                    total += lineItem.Item.UnitPrice * lineItem.Quantity;
+                }
             }
 
             return total;

@@ -14,5 +14,7 @@ namespace KeoghsCheckout.Core
             SKU = sku;
             Description = description;
         }
+
+        public decimal Apply(int lineItemQuantity, int itemUnitPrice) => _offer(lineItemQuantity, itemUnitPrice);
     }
 }

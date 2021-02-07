@@ -10,7 +10,6 @@ namespace KeoghsCheckout.Tests
     {
         /*
          * 
-         * BasketTotalCost_ItemsAddedWithPromotion_CorrectTotalCost
          * BasketTotalCost_ItemsAddedWithAndWithoutPromotions_CorrectTotalCost
          */
         
@@ -83,6 +82,49 @@ namespace KeoghsCheckout.Tests
             basket.AddItem(new Item("D", 55));
             
             Assert.AreEqual(120m, basket.GetTotalCost());
+        }
+
+        [Test]
+        public void BasketTotalCost_ItemsAddedWithPromotion_CorrectTotalCost()
+        {
+            Basket basket = new Basket();
+            basket.AddItem(new Item("B", 15));
+            basket.AddItem(new Item("B", 15));
+            basket.AddItem(new Item("B", 15));
+            basket.AddItem(new Item("B", 15));
+            basket.AddItem(new Item("B", 15));
+            basket.AddItem(new Item("D", 55));
+            basket.AddItem(new Item("D", 55));
+            basket.AddItem(new Item("D", 55));
+            
+            basket.AddPromotion(new Promotion("B", "3 for 40", (quantity, unitPrice) =>
+            {
+                var total = 0.0m;
+                while (quantity >= 3)
+                {
+                    total += 40;
+                    quantity -= 3;
+                }
+            
+                total += quantity * unitPrice;
+                return total;
+            }));
+            
+            
+            basket.AddPromotion(new Promotion("D", "25% off for every 2 purchased together", (quantity, unitPrice) =>
+            {
+                var total = 0.0m;
+                while (quantity >= 2)
+                {
+                    total += ((2 * unitPrice) * 0.75m);
+                    quantity -= 2;
+                }
+            
+                total += quantity * unitPrice;
+                return total;
+            }));
+            
+            Assert.AreEqual(207.5m, basket.GetTotalCost());
         }
     }
 }
