@@ -6,8 +6,8 @@ namespace KeoghsCheckout.Core
 {
     public class Basket
     {
-        private List<LineItem> _lineItems = new List<LineItem>();
-        private List<Promotion> _promotions = new List<Promotion>();
+        private readonly List<LineItem> _lineItems = new List<LineItem>();
+        private readonly List<Promotion> _promotions = new List<Promotion>();
         
         public decimal GetTotalCost()
         {
